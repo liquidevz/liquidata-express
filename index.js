@@ -39,78 +39,192 @@ const transporter = nodemailer.createTransport({
 });
 
 function generateEmailHTML(data) {
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
   return `
     <!DOCTYPE html>
     <html>
       <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Contact Form Submission</title>
         <style>
-          body {
-            font-family: Arial, sans-serif;
+          /* Reset styles */
+          body, p, h1, h2, h3, div, span {
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
-            color: #333;
+            font-family: Arial, sans-serif;
           }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          .header {
+
+          .email-wrapper {
             background-color: #f8f9fa;
             padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+          }
+
+          .email-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            padding: 40px 20px;
             text-align: center;
-            border-radius: 5px;
+            border-radius: 10px 10px 0 0;
           }
-          .content {
-            padding: 20px;
-            background: white;
-            border-radius: 5px;
-            margin-top: 20px;
+
+          .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
           }
-          .field {
+
+          .header-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+          }
+
+          .email-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+
+          .info-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+          }
+
+          .info-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .section-title {
+            font-size: 18px;
+            color: #1a1a1a;
+            font-weight: bold;
             margin-bottom: 15px;
           }
-          .label {
-            font-weight: bold;
-            color: #555;
+
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+          }
+
+          .info-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+          }
+
+          .info-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+          }
+
+          .info-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+          }
+
+          .budget-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+          }
+
+          .highlight {
+            color: #1976d2;
           }
         </style>
       </head>
       <body>
-        <div class="container">
-          <div class="header">
-            <h2>New Contact Form Submission</h2>
+        <div class="email-wrapper">
+          <div class="email-header">
+            <div class="header-title">New Project Inquiry</div>
+            <div class="header-subtitle">A potential client has submitted a project request</div>
           </div>
-          <div class="content">
-            <div class="field">
-              <p class="label">Name:</p>
-              <p>${data.name}</p>
+          
+          <div class="email-content">
+            <div class="info-section">
+              <div class="section-title">Client Information</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Name</div>
+                  <div class="info-value">${data.name}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Company</div>
+                  <div class="info-value">${data.company}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Email</div>
+                  <div class="info-value">${data.email}</div>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <p class="label">Company:</p>
-              <p>${data.company}</p>
+
+            <div class="info-section">
+              <div class="section-title">Project Details</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Project Goal</div>
+                  <div class="info-value">${data.goal}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Desired Completion</div>
+                  <div class="info-value">${formatDate(data.date)}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Budget Range</div>
+                  <div class="info-value">
+                    <span class="budget-tag">${data.budget}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <p class="label">Goal:</p>
-              <p>${data.goal}</p>
-            </div>
-            <div class="field">
-              <p class="label">Desired Completion Date:</p>
-              <p>${data.date}</p>
-            </div>
-            <div class="field">
-              <p class="label">Budget Range:</p>
-              <p>${data.budget}</p>
-            </div>
-            <div class="field">
-              <p class="label">Email:</p>
-              <p>${data.email}</p>
-            </div>
+
             ${data.details ? `
-            <div class="field">
-              <p class="label">Additional Details:</p>
-              <p>${data.details}</p>
+            <div class="info-section">
+              <div class="section-title">Additional Information</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-value">${data.details}</div>
+                </div>
+              </div>
             </div>
             ` : ''}
+
+            <div class="footer">
+              <p>This inquiry was received on ${new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</p>
+            </div>
           </div>
         </div>
       </body>
