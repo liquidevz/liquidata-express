@@ -312,7 +312,8 @@ app.post('/send-email', async (req, res) => {
         name: 'Liquidata Contact Form',
         address: process.env.SMTP_FROM_EMAIL
       },
-      to: process.env.SMTP_TO_EMAIL,
+      // to: process.env.SMTP_TO_EMAIL,
+        to: "anupm019@gmail.com,
       subject: 'New Contact Form Submission - Liquidata',
       html: generateEmailHTML(req.body),
       replyTo: req.body.email
