@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/send-email", "destination": "/api/send-email" }
+  ],
+  "env": {
+    "SMTP_HOST": "@smtp_host",
+    "SMTP_PORT": "@smtp_port",
+    "SMTP_USER": "@smtp_user",
+    "SMTP_PASS": "@smtp_pass",
+    "SMTP_FROM_EMAIL": "@smtp_from_email",
+    "SMTP_TO_EMAIL": "@smtp_to_email"
+  }
+}
