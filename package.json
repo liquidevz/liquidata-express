@@ -1,22 +1,16 @@
 {
   "name": "liquidata-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "vercel dev",
+    "start": "vercel dev"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^4.21.2",
     "nodemailer": "^6.10.1"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "engines": {
+    "node": ">=18.x"
+  }
 }
